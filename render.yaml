@@ -1,0 +1,22 @@
+# Déploiement "as code" du backend sur Render (Blueprint).
+# Sur render.com : New -> Blueprint -> connecter ce repo -> Render lit ce fichier.
+# Les variables marquées sync: false sont à saisir manuellement dans le dashboard Render.
+services:
+  - type: web
+    name: suivi-employes-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: CLIENT_URL
+        sync: false
+      - key: PORT
+        value: 10000
