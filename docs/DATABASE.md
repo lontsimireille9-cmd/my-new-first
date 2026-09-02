@@ -44,7 +44,9 @@
 - `createdBy`: créateur.
 - `companyId`: entreprise.
 - `deadline`: date optionnelle au format `YYYY-MM-DD`.
+- `sortOrder`: ordre d'affichage, utilisé pour réordonner les tâches côté super admin.
 - `statusHistory`: historique des statuts.
+- `completedAt`: date de validation si la tâche passe à `COMPLETED`.
 - `createdAt`, `updatedAt`: dates ISO.
 
 ## Initialisation locale
