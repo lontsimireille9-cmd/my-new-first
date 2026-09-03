@@ -21,6 +21,9 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
+      console.log("EMAIL ENVOYÉ À FIREBASE :", JSON.stringify(email));
+      console.log("PASSWORD LENGTH :", password.length);
+
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
       await api.post("/auth/register-profile", {
         uid: user.uid,
@@ -29,18 +32,33 @@ export default function Register() {
         role: "ADMIN",
       });
       navigate("/setup-company");
-    } catch (err) {
+    /*} catch (err) {
       if (err.code === "auth/email-already-in-use") {
         setError("Cet email est déjà utilisé.");
       } else if (err.code === "auth/weak-password") {
         setError("Le mot de passe doit contenir au moins 6 caractères.");
       } else {
         setError("Impossible de créer le compte.");
-      }
+      }*/
+        } catch (err) {
+    console.error("Erreur inscription Firebase :", err);
+    console.error("Code :", err.code);
+    console.error("Message :", err.message);
+
+    if (err.code === "auth/email-already-in-use") {
+      setError("Cet email est déjà utilisé.");
+    } else if (err.code === "auth/weak-password") {
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
+    } else if (err.code === "auth/network-request-failed") {
+      setError("Erreur réseau lors de la connexion à Firebase.");
+    } else {
+      setError(`Impossible de créer le compte : ${err.message}`);
+    }
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-canvas">

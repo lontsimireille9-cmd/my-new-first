@@ -4,34 +4,61 @@ import MobileHeader from "./MobileHeader";
 import MobileBottomNavigation from "./MobileBottomNavigation";
 import SidebarNavigation from "./SidebarNavigation";
 
-const TITLES = {
+const MAIN_PATHS = {
   "/": "Tableau de bord",
   "/presence": "Présence",
   "/taches": "Tâches",
+  "/historique": "Historique",
   "/employes": "Employés",
   "/equipes": "Équipes",
   "/profil": "Profil",
+  "/parametres": "Parametres",
+  "/rapports": "Rapports",
 };
+
+function getPageTitle(pathname) {
+  if (pathname.startsWith("/historique")) {
+    return "Historique";
+  }
+
+  if (pathname.startsWith("/taches/employe")) {
+    return "Tâches";
+  }
+
+  return MAIN_PATHS[pathname] || "Suivi Employés";
+}
+
+function isMainRoute(pathname) {
+  if (pathname.startsWith("/historique/")) {
+    return false;
+  }
+
+  if (pathname.startsWith("/taches/employe/")) {
+    return false;
+  }
+
+  return Object.prototype.hasOwnProperty.call(MAIN_PATHS, pathname);
+}
 
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const title = TITLES[location.pathname] || "Suivi Employés";
-  const isMainPath = Object.keys(TITLES).includes(location.pathname);
+  const title = getPageTitle(location.pathname);
+  const showBackButton = !isMainRoute(location.pathname);
 
   return (
     <div className="min-h-screen flex bg-canvas">
-      <MobileHeader title={title} showBackButton={!isMainPath} onBack={() => navigate(-1)} />
+      <MobileHeader title={title} showBackButton={showBackButton} onBack={() => navigate(-1)} />
 
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <SidebarNavigation onToggle={setIsSidebarCollapsed} />
       </div>
 
       <main
-        className={`flex-1 max-w-full pt-16 md:pt-8 pb-20 md:pb-8 px-4 md:px-8 transition-all duration-300 ${
-          isSidebarCollapsed ? "md:ml-20" : "md:ml-64"
+        className={`min-w-0 flex-1 max-w-full px-4 pb-24 pt-16 transition-all duration-300 sm:px-6 lg:px-8 lg:pb-8 lg:pt-8 ${
+          isSidebarCollapsed ? "lg:ml-[82px]" : "lg:ml-72"
         }`}
       >
         <Outlet />
